@@ -4,3 +4,13 @@ Este proyecto es un piloto para una automatización de descarga de ordenes de co
 ## Credenciales por variables de entorno
 
 `escuchador.py` toma el usuario y la contraseña del servidor POP3 usando las variables de entorno `USUARIO_OC` y `PASSWORD_OC`. Si no se definen, se utilizarán los valores almacenados en el archivo `~/config.json` creado mediante `configurador.py`.
+=======
+## Instalación de dependencias
+
+Instala las bibliotecas de Python necesarias con:
+
+```bash
+pip install -r requirements.txt
+```
+
+
