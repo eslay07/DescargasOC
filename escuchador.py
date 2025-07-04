@@ -4,7 +4,7 @@ import re
 import time
 import configurador
 from datetime import datetime, timezone, timedelta
-from email.utils import parsedate_to_datetime
+from email.utils import parsedate_to_datetime, parseaddr
 import selenium_modulo
 
 USUARIO, PASSWORD = configurador.obtener_credenciales()
@@ -13,6 +13,7 @@ POP_SERVER = "pop.telconet.ec"
 POP_PORT = 995
 
 PROCESADOS_FILE = "procesados.txt"
+SENDER_FILTER = "jotoapanta@telconet.ec"
 
 def cargar_procesados():
     procesados = set()
@@ -64,6 +65,13 @@ def buscar_oc():
                 continue
         except Exception as e:
             print(f"⚠️ Fecha mal formada: {fecha_header} Error: {e}")
+            guardar_procesado(uidl)
+            continue
+
+        from_header = email_message["from"]
+        _, from_email = parseaddr(from_header or "")
+        if from_email.lower() != SENDER_FILTER:
+            print(f"⏭️ Remitente no coincide: {from_email}")
             guardar_procesado(uidl)
             continue
 
