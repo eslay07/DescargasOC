@@ -7,12 +7,10 @@ from datetime import datetime, timezone, timedelta
 from email.utils import parsedate_to_datetime
 import selenium_modulo
 
-config = configurador.cargar_config()
+USUARIO, PASSWORD = configurador.obtener_credenciales()
 
 POP_SERVER = "pop.telconet.ec"
 POP_PORT = 995
-USUARIO = config["usuario"]
-PASSWORD = config["password"]
 
 PROCESADOS_FILE = "procesados.txt"
 
