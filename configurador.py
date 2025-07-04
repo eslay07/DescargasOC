@@ -8,12 +8,15 @@ CONFIG_FILE = os.path.join(os.path.expanduser("~"), "config.json")
 USUARIO_ENV = "USUARIO_OC"
 PASSWORD_ENV = "PASSWORD_OC"
 
-def guardar_config(usuario, password, carpeta_destino, carpeta_analizar):
+def guardar_config(usuario, password, carpeta_destino, carpeta_analizar,
+                   seafile_url, seafile_token):
     config = {
         "usuario": usuario,
         "password": password,
         "carpeta_destino": carpeta_destino,
-        "carpeta_analizar": carpeta_analizar
+        "carpeta_analizar": carpeta_analizar,
+        "seafile_url": seafile_url,
+        "seafile_token": seafile_token,
     }
     with open(CONFIG_FILE, "w") as f:
         json.dump(config, f)
@@ -60,7 +63,16 @@ def configurar():
         password = entry_password.get()
         carpeta_destino = entry_carpeta_destino.get()
         carpeta_analizar = entry_carpeta_analizar.get()
-        guardar_config(usuario, password, carpeta_destino, carpeta_analizar)
+        seafile_url = entry_seafile_url.get()
+        seafile_token = entry_seafile_token.get()
+        guardar_config(
+            usuario,
+            password,
+            carpeta_destino,
+            carpeta_analizar,
+            seafile_url,
+            seafile_token,
+        )
         ventana.destroy()
 
     ventana = tk.Tk()
@@ -83,6 +95,14 @@ def configurar():
     entry_carpeta_analizar = tk.Entry(ventana, width=50)
     entry_carpeta_analizar.pack()
     tk.Button(ventana, text="Seleccionar carpeta a analizar", command=seleccionar_carpeta_analizar).pack()
+
+    tk.Label(ventana, text="Seafile URL:").pack()
+    entry_seafile_url = tk.Entry(ventana, width=50)
+    entry_seafile_url.pack()
+
+    tk.Label(ventana, text="Seafile Token:").pack()
+    entry_seafile_token = tk.Entry(ventana, width=50)
+    entry_seafile_token.pack()
 
     tk.Button(ventana, text="Guardar configuración", command=guardar).pack(pady=10)
 

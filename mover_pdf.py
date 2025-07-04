@@ -1,24 +1,22 @@
 import os
-import shutil
 import configurador
 import PyPDF2
+import seafile_client
 
 def mover_oc():
     config = configurador.cargar_config()
     carpeta_origen = config["carpeta_analizar"]
-    carpeta_destino = config["carpeta_destino"]
+    repo_id = config["carpeta_destino"]  # se utiliza como identificador del repo en Seafile
+    cliente = seafile_client.get_client_from_config()
 
     print(f"📂 Analizando archivos en: {carpeta_origen}")
-    print(f"📁 Destino: {carpeta_destino}")
+    print(f"📁 Repo destino: {repo_id}")
 
     # Verifica existencia
     if not os.path.exists(carpeta_origen):
         print(f"❌ Carpeta origen no existe: {carpeta_origen}")
         return
 
-    if not os.path.exists(carpeta_destino):
-        print(f"⚠️ Carpeta destino no existe. Creando: {carpeta_destino}")
-        os.makedirs(carpeta_destino)
 
     archivos = [f for f in os.listdir(carpeta_origen) if f.lower().endswith(".pdf")]
     if not archivos:
@@ -35,9 +33,9 @@ def mover_oc():
                     texto += pagina.extract_text() or ""
 
                 if "ORDEN DE COMPRA" in texto.upper():
-                    destino_final = os.path.join(carpeta_destino, archivo)
-                    shutil.move(ruta_archivo, destino_final)
-                    print(f"✅ Archivo movido: {archivo} -> {destino_final}")
+                    cliente.upload_file(repo_id, ruta_archivo)
+                    os.remove(ruta_archivo)
+                    print(f"✅ Archivo subido: {archivo}")
                 else:
                     print(f"⏭️ No es OC: {archivo}")
 
