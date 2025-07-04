@@ -5,6 +5,9 @@ import json
 
 CONFIG_FILE = os.path.join(os.path.expanduser("~"), "config.json")
 
+USUARIO_ENV = "USUARIO_OC"
+PASSWORD_ENV = "PASSWORD_OC"
+
 def guardar_config(usuario, password, carpeta_destino, carpeta_analizar):
     config = {
         "usuario": usuario,
@@ -25,6 +28,21 @@ def cargar_config():
     except FileNotFoundError:
         print("⚠️ No se encontró configuración previa.")
         return None
+
+def obtener_credenciales():
+    """Devuelve usuario y contraseña desde variables de entorno
+    USUARIO_ENV y PASSWORD_ENV. Si no existen, recurre al archivo
+    de configuración."""
+    config = cargar_config()
+    usuario = os.getenv(USUARIO_ENV)
+    password = os.getenv(PASSWORD_ENV)
+
+    if not usuario and config:
+        usuario = config.get("usuario")
+    if not password and config:
+        password = config.get("password")
+
+    return usuario, password
 
 def configurar():
     def seleccionar_carpeta_destino():
